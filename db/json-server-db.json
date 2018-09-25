@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "title": "First item",
+      "content": "First item sample content",
+      "createdOn": "2018-09-01T15:30:00.511Z"
+    },
+    {
+      "id": 2,
+      "title": "Second item",
+      "content": "Second item sample content",
+      "createdOn": "2018-09-02T16:32:14.511Z"
+    }
+  ]
+}

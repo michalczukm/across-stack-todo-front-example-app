@@ -12,8 +12,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:dev": "json-server --watch db/json-server-db.json --port 3001 | npm start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "json-server": "^0.14.0"
   }
 }

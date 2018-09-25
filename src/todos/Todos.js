@@ -27,13 +27,13 @@ export class Todos extends Component {
 	}
 
 	getTodos() {
-		fetch(`${API_BASE_URI}/todos`)
+		fetch(`${API_BASE_URI}/items`)
 			.then(response => response.json())
 			.then(todos => this.setState({ todos }));
 	}
 
 	addItem() {
-		fetch(`${API_BASE_URI}/todos`, {
+		fetch(`${API_BASE_URI}/items`, {
 			method: 'POST',
 			body: JSON.stringify({
 				content: this.state.content
@@ -52,7 +52,7 @@ export class Todos extends Component {
 	}
 
 	deleteItem(id) {
-		fetch(`${API_BASE_URI}/todos/${id}`, {
+		fetch(`${API_BASE_URI}/items/${id}`, {
 			method: 'DELETE'
 		})
 			.then(() => {
@@ -62,7 +62,7 @@ export class Todos extends Component {
 	}
 
 	updateItem(id, content) {
-		fetch(`${API_BASE_URI}/todos/${id}`, {
+		fetch(`${API_BASE_URI}/items/${id}`, {
 			method: 'PUT',
 			body: JSON.stringify({
 				content
