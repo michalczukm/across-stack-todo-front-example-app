@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:dev": "json-server --watch db/json-server-db.json --port 3001 | npm start",
+    "start:dev": "json-server --watch db/json-server-db.json --port 3001 | REACT_APP_API_BASE=http://localhost:3001 npm start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
