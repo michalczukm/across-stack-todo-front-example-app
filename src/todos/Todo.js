@@ -1,99 +1,68 @@
 import React, { Component, Fragment } from 'react';
-import ListItem from '@material-ui/core/ListItem/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar/Avatar';
-import { Delete, Face, SaveOutlined, Edit, CancelOutlined } from '@material-ui/icons'
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import { Input } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Paper from '@material-ui/core/Paper/Paper';
+import TextField from '@material-ui/core/TextField/TextField';
+import { withStyles } from '@material-ui/core';
+import { emptyItem } from './todo-item';
 
-export default class Todo extends Component {
+const styles = theme => ({
+	item: {
+		display: 'flex',
+		'flex-direction': 'column'
+	}
+});
+
+class Todo extends Component {
+	onEnterPressed = this.props.onEnterPressed;
+
 	state = {
-		content: '',
-		mode: 'read'
+		item: this.props.item || emptyItem,
 	};
 
-	actions = {};
-	shouldShowActions = false;
-
 	componentDidMount() {
-		this.setState({ content: this.props.item.content });
-
-		const { onUpdate, onDelete } = this.props;
-
-		this.actions = {
-			onUpdate, onDelete
-		};
-
-		this.shouldShowActions = !!onUpdate && !!onDelete;
+		this.props.cleanFormRef && this.props.cleanFormRef(() => this.clearForm());
 	}
 
-	exitEditMode = () => this.setState({ mode: 'read' });
-	enterEditMode = () => this.setState({ mode: 'edit' });
-
-	listAction() {
-		if(!this.shouldShowActions) {
-			return (<Fragment></Fragment>);
+	handleKeyPress(event) {
+		if (event.key === 'Enter') {
+			this.onEnterPressed(this.state.item);
 		}
+	}
 
-		return (
-			<Fragment>
-				{
-					this.state.mode === 'read'
-						? <div>
-							<IconButton aria-label="Edit">
-								<Edit onClick={() => this.enterEditMode()} />
-							</IconButton>
-							<IconButton aria-label="Delete">
-								<Delete color="error" onClick={() => this.actions.onDelete()} />
-							</IconButton>
-						</div>
-						: <div>
-							<IconButton aria-label="Cancel">
-								<CancelOutlined onClick={() => this.exitEditMode()} />
-							</IconButton>
-							<IconButton aria-label="Save">
-								<SaveOutlined color="primary" onClick={() => this.exitEditMode() || this.actions.onUpdate(this.state.content)} />
-							</IconButton>
-						</div>
-				}
-			</Fragment>
-		)
+	clearForm() {
+		this.setState({item: this.props.item || emptyItem});
 	}
 
 	render() {
+		const {classes} = this.props;
+
 		return (
-			<div>
-				<Paper>
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<Face />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText>
-							<FormGroup>
-								<FormControlLabel
-									control={
-										<Input
-											disabled={this.state.mode === 'read'}
-											onChange={event => this.setState({ content: event.currentTarget.value })}
-											value={this.state.content}
-										/>
-									}
-								/>
-							</FormGroup>
-						</ListItemText>
-						<ListItemSecondaryAction>
-							{this.listAction()}
-						</ListItemSecondaryAction>
-					</ListItem>
-				</Paper>
-			</div>
+			<Fragment>
+				<div className={classes.item}>
+					<TextField
+						label={'Title'}
+						onKeyPress={(event) => this.handleKeyPress(event)}
+						onChange={event => this.setState({
+							item: {
+								...this.state.item,
+								title: event.target.value
+							}
+						})}
+						value={this.state.item.title}
+					/>
+					<TextField
+						label={'Content'}
+						onKeyPress={(event) => this.handleKeyPress(event)}
+						onChange={event => this.setState({
+							item: {
+								...this.state.item,
+								content: event.target.value
+							}
+						})}
+						value={this.state.item.content}
+					/>
+				</div>
+			</Fragment>
 		)
 	}
 }
+
+export default withStyles(styles)(Todo);
