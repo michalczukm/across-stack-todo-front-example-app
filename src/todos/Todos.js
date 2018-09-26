@@ -4,9 +4,9 @@ import { Clear } from '@material-ui/icons'
 import Grid from '@material-ui/core/Grid/Grid';
 import './Todos.css';
 import Todo from './Todo';
-import { API_BASE_URI } from '../config';
 import Paper from '@material-ui/core/Paper/Paper';
 import IconButton from '@material-ui/core/IconButton/IconButton';
+import todosService from './todos.service';
 
 const withEmptyListHandling = (list, iterator) => list && list.length
 	? list.map(iterator)
@@ -37,55 +37,32 @@ class Todos extends Component {
 	}
 
 	getTodos() {
-		fetch(`${API_BASE_URI}/items`)
-			.then(response => response.json())
+		todosService.getAll()
 			.then(todos => this.setState({todos}));
 	}
 
-	isItemValid = (item) => item.title && item.content;
-
 	addItem(item) {
-		fetch(`${API_BASE_URI}/items`, {
-			method: 'POST',
-			body: JSON.stringify(item),
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		})
-			.then(response => {
-				if (response.status !== 201) {
-
-				} else {
-
-				}
-
+		todosService.addItem(item)
+			.then(() => {
 				this.resetNewItem();
 				this.getTodos();
-			});
+			})
+			.catch((error) => alert('Ups!' + JSON.stringify(error)));
 	}
 
-	resetNewItem = () => this.cleanFormRef && this.cleanFormRef();
-
 	deleteItem(id) {
-		fetch(`${API_BASE_URI}/items/${id}`, {
-			method: 'DELETE'
-		})
-			.then(() => {
-				this.getTodos();
-			})
+		todosService.deleteItem(id)
+			.then(() => this.getTodos())
 			.catch((error) => alert('Ups!' + JSON.stringify(error)));
 	}
 
 	updateItem(id, item) {
-		fetch(`${API_BASE_URI}/items/${id}`, {
-			method: 'PUT',
-			body: JSON.stringify(item)
-		})
-			.then(() => {
-				this.getTodos();
-			})
+		todosService.updateItem(id, item)
+			.then(() => this.getTodos())
 			.catch((error) => alert('Ups!' + JSON.stringify(error)));
 	}
+
+	resetNewItem = () => this.cleanFormRef && this.cleanFormRef();
 
 	renderAddItem() {
 		const {classes} = this.props;
