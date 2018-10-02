@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, createRef } from 'react';
 import TextField from '@material-ui/core/TextField/TextField';
 import { withStyles } from '@material-ui/core';
 import { emptyItem } from './todo-item';
@@ -11,6 +11,8 @@ const styles = theme => ({
 });
 
 class Todo extends Component {
+	titleInputRef = createRef();
+
 	onEnterPressed = this.props.onEnterPressed;
 
 	state = {
@@ -29,6 +31,7 @@ class Todo extends Component {
 
 	clearForm() {
 		this.setState({item: this.props.item || emptyItem});
+		this.titleInputRef.current.focus();
 	}
 
 	render() {
@@ -47,6 +50,7 @@ class Todo extends Component {
 							}
 						})}
 						value={this.state.item.title}
+						inputRef={this.titleInputRef}
 					/>
 					<TextField
 						label={'Content'}
