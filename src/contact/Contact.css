@@ -1,0 +1,10 @@
+.contact {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.contact-item {
+    display: flex;
+}

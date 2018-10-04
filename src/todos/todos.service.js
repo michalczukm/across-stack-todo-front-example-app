@@ -1,28 +1,29 @@
-import { API_BASE_URI } from '../config';
-
-const shouldUseExternalService = !!API_BASE_URI;
-
-const itemsLocalStorage = ((key) => ({
-	get: () => JSON.parse(localStorage.getItem(key)) || [],
-	set: (value) => localStorage.setItem(key, JSON.stringify(value))
-}))('todos-items');
-
+import {
+	buildLocalStorageEntity,
+	shouldUseExternalService
+} from '../utils';
+import {
+	API_BASE_URI
+} from '../config';
+const itemsLocalStorage = buildLocalStorageEntity('todos-items');
 const localStorageStorage = new class LocalStorageStorage {
 	addItem(newItem) {
 		const existingItems = itemsLocalStorage.get();
 		const lastId = Math.max(...existingItems.map(item => item.id)) || 0;
 
-		itemsLocalStorage.set([...existingItems, {...newItem, id: lastId + 1}]);
+		itemsLocalStorage.set([...existingItems, { ...newItem,
+			id: lastId + 1
+		}]);
 		return Promise.resolve();
 	};
 
 	updateItem = (id, updatedItem) => Promise.resolve(
 		itemsLocalStorage.set(
 			itemsLocalStorage.get()
-				.map((item) => item.id !== id ? item : ({
-					...item,
-					...updatedItem
-				}))
+			.map((item) => item.id !== id ? item : ({
+				...item,
+				...updatedItem
+			}))
 		)
 	);
 
@@ -65,5 +66,6 @@ const externalServiceStorage = new class ExternalServiceStorage {
 }();
 
 export default shouldUseExternalService
-	? externalServiceStorage
-	: localStorageStorage;
+	?
+	externalServiceStorage :
+	localStorageStorage;
