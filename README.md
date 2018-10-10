@@ -1,5 +1,6 @@
 # Across Stack
 This repository contains example implementation of TODO list app - the front-end part.
+Run it now -> [demo based on localStorage](https://michalczukm.github.io/across-stack-todo-front-example-app/)
 
 It expects that API will cover [this specification](https://michalczukmpresentstodoapi.docs.apiary.io).
 
